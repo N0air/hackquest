@@ -1,0 +1,639 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap');
+
+:root {
+    --terminal-bg: #1a1a1a;
+    --terminal-text: #00ff00;
+    --terminal-header: #2a2a2a;
+}
+
+body {
+    background: #000;
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Code Pro', monospace;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.terminal-container {
+    background: var(--terminal-bg);
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    border-radius: 6px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    height: calc(100vh - 40px);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.terminal-header {
+    background: var(--terminal-header);
+    padding: 10px;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 8px;
+    margin-right: 15px;
+}
+
+.terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.close { background: #ff5f56; }
+.minimize { background: #ffbd2e; }
+.maximize { background: #27c93f; }
+
+.terminal-title {
+    color: #888;
+    font-size: 14px;
+}
+
+.terminal-content {
+    padding: 20px;
+    color: var(--terminal-text);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding: 15px;
+    line-height: 1.4;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-output::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-output::-webkit-scrollbar-track {
+    background: var(--terminal-bg);
+}
+
+.terminal-output::-webkit-scrollbar-thumb {
+    background: var(--terminal-text);
+    border-radius: 4px;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    min-height: 24px;
+    position: relative;
+}
+
+.prompt {
+    color: var(--terminal-text);
+    margin-right: 10px;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--terminal-text);
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    position: relative;
+    z-index: 1;
+}
+
+.cursor {
+    width: 8px;
+    height: 15px;
+    background: var(--terminal-text);
+    display: inline-block;
+    animation: blink 1s infinite;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: left 0.05s ease;
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+.typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0;
+    animation: typing 2s steps(40, end);
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+.input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+}
+
+/* Add styles for copyable content */
+.copyable-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+}
+
+.copy-button {
+    background: var(--terminal-text);
+    color: var(--terminal-bg);
+    border: none;
+    padding: 2px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.copy-button:hover {
+    opacity: 1;
+}
+
+/* Add animation for copy feedback */
+@keyframes copyFeedback {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.copy-feedback {
+    animation: copyFeedback 0.3s ease;
+}
+
+/* Add styles for better text organization */
+.section-divider {
+    text-align: center;
+    color: rgba(0, 255, 0, 0.3);
+    margin: 20px 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0, 255, 0, 0.3), transparent);
+}
+
+.terminal-output p {
+    margin: 3px 0;
+    line-height: 1.4;
+}
+
+.terminal-output .header {
+    color: #00ff00;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.terminal-output .subheader {
+    color: #00cc00;
+    margin-bottom: 5px;
+}
+
+.terminal-output .important {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.terminal-output .info {
+    opacity: 0.8;
+}
+
+.terminal-output .command-example {
+    color: #00ffcc;
+    margin-left: 20px;
+}
+
+/* Update copyable content styling */
+.copyable-content {
+    background: rgba(0, 255, 0, 0.1);
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.terminal-output .level-header {
+    color: #00ff00;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 2px solid #00ff00;
+}
+
+.terminal-output .header {
+    color: #00ff00;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+}
+
+.terminal-output .subheader {
+    color: #00cc00;
+    font-size: 1.1em;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.terminal-output .divider {
+    border-bottom: 1px solid #00ff00;
+    opacity: 0.3;
+    margin: 15px 0;
+}
+
+.terminal-output .header {
+    color: #00ff00;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+@keyframes blink-warning {
+    0%, 49% { color: #ff0000; }
+    50%, 100% { color: #ffff00; }
+}
+
+.terminal-output p:nth-child(3) {
+    animation: blink-warning 1s infinite;
+    font-weight: bold;
+}
+
+/* Style for emojis in terminal */
+.terminal-output p {
+    line-height: 1.5;
+}
+
+/* Command examples with slight indent and different color */
+.terminal-output .command-example {
+    color: #00ffcc;
+    padding-left: 20px;
+}
+
+/* Add a subtle glow effect to important messages */
+.terminal-output p strong {
+    text-shadow: 0 0 5px #00ff00;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: var(--terminal-bg);
+    border: 2px solid var(--terminal-text);
+    border-radius: 6px;
+    width: 90%;
+    max-width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.modal-header {
+    background: var(--terminal-header);
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--terminal-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    color: var(--terminal-text);
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.close-modal {
+    color: var(--terminal-text);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: #ff5f56;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+#auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#auth-form input {
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid var(--terminal-text);
+    padding: 10px;
+    color: var(--terminal-text);
+    font-family: 'Source Code Pro', monospace;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#auth-form input:focus {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    border-color: #00ff00;
+}
+
+#auth-form button {
+    background: transparent;
+    color: var(--terminal-text);
+    border: 2px solid var(--terminal-text);
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+#auth-form button:hover {
+    background: var(--terminal-text);
+    color: var(--terminal-bg);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+#auth-message {
+    color: var(--terminal-text);
+    margin: 15px 0;
+    text-align: center;
+    min-height: 20px;
+}
+
+#auth-toggle {
+    color: var(--terminal-text);
+    text-align: center;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+#auth-toggle:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Add animation for modal */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.modal-content {
+    animation: modalFadeIn 0.3s ease forwards;
+}
+
+/* Style for error messages */
+.error-message {
+    color: #ff5f56;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Style for success messages */
+.success-message {
+    color: #27c93f;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Challenge Section Styling */
+.challenge-section {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 4px;
+}
+
+/* Command History Styling */
+.command-history {
+    color: #888;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Challenge Headers */
+.challenge-header {
+    color: #00ff00;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+    margin: 10px 0;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Challenge Description */
+.challenge-description {
+    padding: 10px 0;
+    color: #0f0;
+    line-height: 1.5;
+}
+
+/* Available Commands Section */
+.available-commands {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(0, 255, 0, 0.05);
+    border-left: 3px solid #00ff00;
+}
+
+/* Command Examples */
+.command-example {
+    color: #00ffcc;
+    padding: 5px 20px;
+    font-family: 'Source Code Pro', monospace;
+}
+
+/* System Messages */
+.system-message {
+    color: #ffff00;
+    padding: 5px 0;
+    font-style: italic;
+}
+
+/* Success Messages */
+.success-message {
+    color: #00ff00;
+    padding: 5px 0;
+    font-weight: bold;
+}
+
+/* Error Messages */
+.error-message {
+    color: #ff0000;
+    padding: 5px 0;
+    font-weight: bold;
+}
+
+/* Progress Updates */
+.progress-update {
+    color: #00ffff;
+    padding: 5px 0;
+    margin: 10px 0;
+}
+
+/* Dividers */
+.section-divider {
+    text-align: center;
+    color: rgba(0, 255, 0, 0.3);
+    margin: 15px 0;
+    user-select: none;
+}
+
+/* Copyable Content */
+.copyable-content {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 255, 0, 0.05);
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.copyable-content span {
+    flex: 1;
+    font-family: 'Source Code Pro', monospace;
+}
+
+/* Level Information */
+.level-info {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 4px;
+}
+
+/* Objective Display */
+.objective {
+    color: #00ff00;
+    padding: 10px;
+    margin: 10px 0;
+    border-left: 3px solid #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+/* Tips and Hints */
+.hint {
+    color: #888;
+    padding: 10px;
+    margin: 10px 0;
+    font-style: italic;
+    border-left: 3px solid #888;
+}
+
+/* Animation for new content */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.terminal-output > p {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Command Input History */
+.user-command {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    margin: 5px 0;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+    font-family: 'Source Code Pro', monospace;
+}
+
+.user-command .prompt {
+    color: #00ff00;
+    margin-right: 10px;
+    opacity: 0.8;
+}
+
+.user-command .command-text {
+    color: #fff;
+}
+
+/* Game Content Container */
+.game-content {
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(0, 255, 0, 0.03);
+    border-radius: 4px;
+    border-left: 3px solid #00ff00;
+}
+
+/* Challenge Content */
+.challenge-content {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 4px;
+}
+
+/* Response Content */
+.response-content {
+    margin: 10px 0;
+    padding: 10px 15px;
+    background: rgba(0, 255, 0, 0.02);
+    border-left: 3px solid #00ccff;
+}
+
+.terminal-output > * {
+    margin: 5px 0;
+} 

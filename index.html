@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackQuest - Master the Art of Cybersecurity</title>
+    <link rel="stylesheet" href="./css/terminal.css">
+    <link rel="stylesheet" href="./css/landing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="description" content="HackQuest - An interactive hacking simulation game. Master cybersecurity through challenging levels and realistic terminal interactions.">
+    <meta name="keywords" content="hacking game, cybersecurity, terminal game, ethical hacking, programming game">
+    <meta name="author" content="N0air">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="HackQuest - Master the Art of Cybersecurity">
+    <meta property="og:description" content="An interactive hacking simulation game. Learn cybersecurity through challenging levels and realistic terminal interactions.">
+    <meta property="og:image" content="./images/preview.png">
+    <meta property="og:url" content="https://YOUR_USERNAME.github.io/hackquest">
+</head>
+<body>
+    <!-- Landing Page Container -->
+    <div class="landing-container">
+        <!-- Matrix-style background animation -->
+        <canvas id="matrix-bg"></canvas>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="glitch-container">
+                <h1 class="glitch" data-text="HackQuest">HackQuest</h1>
+            </div>
+            <p class="tagline">Master the Art of Ethical Hacking</p>
+            <button class="start-btn" onclick="startTerminal()">Initialize Terminal</button>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>5 Challenging Levels</h3>
+                <p>From basic network scanning to advanced system exploitation</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>Real Terminal Experience</h3>
+                <p>Authentic command-line interface with realistic feedback</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Learn Cybersecurity</h3>
+                <p>Practice ethical hacking in a safe environment</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal Container (Moved outside landing container) -->
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <div class="terminal-button close"></div>
+                <div class="terminal-button minimize"></div>
+                <div class="terminal-button maximize"></div>
+            </div>
+            <div class="terminal-title">hackquest@terminal:~</div>
+        </div>
+        <div class="terminal-content">
+            <div class="terminal-output"></div>
+            <div class="terminal-input-line">
+                <span class="prompt">guest@hackquest:~$</span>
+                <div class="input-wrapper">
+                    <input type="text" class="terminal-input" spellcheck="false">
+                    <span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Login</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="auth-form">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit">Submit</button>
+                </form>
+                <p id="auth-message"></p>
+                <p id="auth-toggle">
+                    <span id="login-text">Don't have an account? Register</span>
+                    <span id="register-text" style="display: none;">Already have an account? Login</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/md5.min.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/terminal.js"></script>
+    <script src="./js/md5.js"></script>
+    <script src="./js/levels.js"></script>
+    <script src="./js/matrix.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user was in game
+            const wasInGame = localStorage.getItem('inGame') === 'true';
+            if (wasInGame) {
+                const landingContainer = document.querySelector('.landing-container');
+                const terminalContainer = document.querySelector('.terminal-container');
+                
+                landingContainer.style.display = 'none';
+                terminalContainer.style.display = 'flex';
+                terminalContainer.style.opacity = '1';
+                terminal.input.focus();
+                
+                // Restore user session if logged in
+                if (auth.restoreSession()) {
+                    terminal.printOutput({ type: 'header', text: `=== HACKQUEST TERMINAL RESTORED: ${auth.currentUser} ===` });
+                } else {
+                    terminal.printOutput({ type: 'header', text: "=== HACKQUEST TERMINAL RESTORED ===" });
+                }
+                
+                terminal.printOutput("");
+                terminal.printOutput("🔄 Session restored successfully!");
+                terminal.printOutput("Type 'help' to see available commands.");
+            }
+        });
+
+        function startTerminal() {
+            const landingContainer = document.querySelector('.landing-container');
+            const terminalContainer = document.querySelector('.terminal-container');
+            
+            // Set game state
+            localStorage.setItem('inGame', 'true');
+            
+            // Fade out landing page
+            landingContainer.style.opacity = '0';
+            landingContainer.style.transition = 'opacity 0.5s ease';
+            
+            // After fade out, hide landing and show terminal
+            setTimeout(() => {
+                landingContainer.style.display = 'none';
+                terminalContainer.style.display = 'flex';
+                terminalContainer.style.opacity = '0';
+                
+                // Fade in terminal
+                setTimeout(() => {
+                    terminalContainer.style.opacity = '1';
+                    terminalContainer.style.transition = 'opacity 0.5s ease';
+                    terminal.input.focus();
+                    
+                    // Show introduction messages
+                    const introMessages = [
+                        "=== HACKQUEST TERMINAL INITIALIZED ===",
+                        "",
+                        "⚠️ UNAUTHORIZED ACCESS DETECTED ⚠️",
+                        "Initializing security protocols...",
+                        "Establishing secure connection...",
+                        "Loading neural interface...",
+                        "",
+                        "🔒 WELCOME TO HACKQUEST 🔒",
+                        "Version 1.0.0 (Codename: Digital Phantom)",
+                        "",
+                        "Available commands:",
+                        "  help     - Show help message",
+                        "  about    - About HackQuest",
+                        "  levels   - Show game levels info",
+                        "  login    - Access your account",
+                        "  register - Create new account",
+                        "  clear    - Clear terminal",
+                        "",
+                        "⚡ Ready to test your hacking skills? ⚡",
+                        "Login or register to begin your journey!",
+                        "",
+                        "Remember: With great power comes great responsibility... ",
+                        "          and better security practices! 🛡️",
+                        "",
+                        "Type 'help' to get started..."
+                    ];
+
+                    // Print messages with typewriter effect
+                    let delay = 0;
+                    const baseDelay = 50;
+                    const lineDelay = 500;
+
+                    introMessages.forEach((msg, index) => {
+                        delay += msg.length * baseDelay + lineDelay;
+                        
+                        setTimeout(() => {
+                            if (msg.startsWith('===')) {
+                                terminal.printOutput({ type: 'header', text: msg });
+                            } else if (msg.startsWith('  ')) {
+                                terminal.printOutput({ type: 'command-example', text: msg });
+                            } else {
+                                terminal.printOutput(msg);
+                            }
+                            
+                            terminal.output.scrollTop = terminal.output.scrollHeight;
+                        }, delay);
+                    });
+                }, 50);
+            }, 500);
+        }
+    </script>
+</body>
+</html> 
