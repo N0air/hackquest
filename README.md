@@ -11,7 +11,8 @@ An interactive terminal-based hacking simulation game. Master the art of cyberse
 - Realistic hacking scenarios
 
 ## Play Now
-Visit [https://YOUR_USERNAME.github.io/hackquest](https://YOUR_USERNAME.github.io/hackquest) to start playing!
+Visit https://n0air.github.io/hackquest to start playing!
+
 
 ## Technologies Used
 - HTML5
